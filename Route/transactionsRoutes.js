@@ -4,7 +4,7 @@ const protect = require('../middleware/authmiddleware');
 const { AddTransaction, FetchAllTransaction, FetchTransaction } = require('../controller/transactionController');
 
 const router= express.Router();
-router.route('/add-transaction').post(protect,AddTransaction);
-router.route('/fetch/:transactionId').get(protect,FetchTransaction);
-router.route('/fetch-all/:userId').get(protect,FetchAllTransaction);
+router.route('/add-transaction').post(AddTransaction);
+router.route('/fetch/:transactionId').get(FetchTransaction);
+router.route('/fetch-all/:userId').get(FetchAllTransaction);
 module.exports=router;

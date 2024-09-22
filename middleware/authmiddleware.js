@@ -25,7 +25,6 @@ const protect = asyncHandler(async (req, res, next) => {
 
             // Find the user by ID (from token) and attach to req.user
             req.user = await User.findById(decoded.id).select("-password");
-
             return next();
         } catch (error) {
             res.status(401);
