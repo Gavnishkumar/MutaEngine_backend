@@ -5,6 +5,6 @@ const { AddTransaction, FetchAllTransaction, FetchTransaction } = require('../co
 
 const router= express.Router();
 router.route('/add-transaction').post(protect,AddTransaction);
-router.route('/fetch/:transactionId').get(FetchTransaction);
-router.route('/fetch-all/:userId').get(FetchAllTransaction);
+router.route('/fetch/:transactionId').get(protect,FetchTransaction);
+router.route('/fetch-all/:userId').get(protect,FetchAllTransaction);
 module.exports=router;

@@ -1,7 +1,6 @@
 const express= require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-// const cookieSession = require('cookie-session');
 const session = require('express-session');
 const dotenv= require('dotenv');
 const connectDB = require('./config/db');
@@ -11,39 +10,28 @@ const paymentGatewayRoutes= require('./Route/paymentGatewayRoutes');
 const cors= require('cors');
 const User = require('./models/User');
 const transactionsRoutes= require('./Route/transactionsRoutes');
-const cookieParser = require('cookie-parser')
+
+
 const app= express();
 app.use(express.json());
 dotenv.config();
 connectDB();
 
 app.use(cors({
-  origin: 'http://localhost:3000', // React frontend
+  origin: process.env.CLIENT_URI, // React frontend
   credentials: true // Allow cookies to be sent across domains
 }));
 
-app.use(cookieParser);
+
 // Use express-session to manage session for users
-// app.use(
-//   session({
-//     secret: 'your_secret_key', // Replace with a random secret key
-//     resave: false, // Don't save session if unmodified
-//     saveUninitialized: true, // Save a session that is new, but has not been modified
-//     cookie: { secure: false } // For development. Set secure to true if using HTTPS in production.
-//   })
-// );
 app.use(
   session({
-    secret: 'your_secret_key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false,  // Set to true only in production with HTTPS
-      httpOnly: true, // Prevents client-side JS from accessing cookies
-    }
+    secret: 'your_secret_key', // Replace with a random secret key
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: true, // Save a session that is new, but has not been modified
+    cookie: { secure: false } // For development. Set secure to true if using HTTPS in production.
   })
 );
-
 
 // Initialize passport and session
 app.use(passport.initialize());
@@ -51,15 +39,15 @@ app.use(passport.session());
 
 // Passport serialize user
 passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  User.findById(id).then((user) => {
-    done(null, user);
+    done(null, user.id); // Save the user ID into session
   });
-});
-
+  
+  // Passport deserialize user
+  passport.deserializeUser(function (id, done) {
+    User.findById(id).then((user) => {
+      done(null, user);
+    });
+  });
 
 // Google OAuth2 strategy setup
 passport.use(
@@ -101,10 +89,9 @@ app.get(
   
   app.get(
     '/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: 'http://localhost:3000' }),
+    passport.authenticate('google', { failureRedirect: process.env.CLIENT_URI }),
     (req, res) => {
-      console.log('User authenticated:', req.user); // This should log the user
-      res.redirect('http://localhost:3000'); // Redirect to frontend
+      res.redirect(process.env.CLIENT_URI); // Redirect to frontend
     }
   );
   
@@ -114,7 +101,7 @@ app.get(
       if (err) {
         return next(err);
       }
-      res.redirect('http://localhost:3000/login/'); // Redirect to home page or login page
+      res.redirect(`${process.env.CLIENT_URI}/login/`); // Redirect to home page or login page
     });
   });
   

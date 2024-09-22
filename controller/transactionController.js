@@ -22,7 +22,6 @@ const AddTransaction = asyncHandler(async (req, res) => {
       const savedTransaction = await newTransaction.save();
       res.status(201).json(savedTransaction);
     } catch (error) {
-      console.error('Error adding transaction:', error);
       res.status(500).json({ message: 'Error adding transaction', error });
     }
   });
@@ -37,7 +36,7 @@ const FetchTransaction = asyncHandler(async (req, res) => {
   
       res.json(transaction);
     } catch (error) {
-      console.error('Error fetching transaction:', error);
+   
       res.status(500).json({ message: 'Error fetching transaction', error });
     }
   });
@@ -51,7 +50,7 @@ const FetchTransaction = asyncHandler(async (req, res) => {
         }
         res.json(transactions); // Respond with the found transactions
     } catch (error) {
-        console.error('Error fetching transactions:', error);
+        
         res.status(500).json({ message: 'Error fetching transactions', error });
     }
 });
