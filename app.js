@@ -10,7 +10,7 @@ const paymentGatewayRoutes= require('./Route/paymentGatewayRoutes');
 const cors= require('cors');
 const User = require('./models/User');
 const transactionsRoutes= require('./Route/transactionsRoutes');
-
+const MongoStore = require('connect-mongo');
 
 const app= express();
 app.use(express.json());
@@ -32,7 +32,10 @@ app.use(
     cookie: {
     secure: true, // Set to true for HTTPS in production
     maxAge: 24 * 60 * 60 * 1000 // 1 day
-  }// For development. Set secure to true if using HTTPS in production.
+  },// For development. Set secure to true if using HTTPS in production.
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI
+  }),
   })
 );
 
