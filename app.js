@@ -29,7 +29,10 @@ app.use(
     secret: 'your_secret_key', // Replace with a random secret key
     resave: false, // Don't save session if unmodified
     saveUninitialized: true, // Save a session that is new, but has not been modified
-    cookie: { secure: true } // For development. Set secure to true if using HTTPS in production.
+    cookie: {
+    secure: true, // Set to true for HTTPS in production
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }// For development. Set secure to true if using HTTPS in production.
   })
 );
 
